@@ -177,9 +177,10 @@ Channels provide communication between goroutines.
   }()
   // goroutine 2
   go func(){
-	s := <-c
-  	fmt.Println(s) // "hello!"
+    s := <-c
+   fmt.Println(s) // "hello!"
   }()
+
 * Select
 
 A `select` statement blocks until communication can proceed.
