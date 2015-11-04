@@ -1,0 +1,320 @@
+How to "Go" 
+CodeCamp Iași, November 7, 2015
+
+Cosmin Ilie
+Cloud Services Manager
+Optymyze
+@cosmin_ilie
+
+* 
+.image codecamp/slide_sponsors.png 600 800
+
+* 
+
+.image codecamp/logo.png
+.image codecamp/talks.png
+
+
+* What is Go?
+Go is a compiled, concurrent, garbage-collected, statically typed language developed at Google. It is an open source project.
+
+It is the brainchild of:
+- Robert Griesemer (Google's V8 JavaScript engine,  Java HotSpot virtual machine)
+- Rob Pike (UTF-8, Unix, Plan 9 from Bell Labs)
+- Ken Thomson (UTF-8, Designed and implemented the original Unix operating system, creator of the B programming language) 
+.link http://golang.org
+
+* Why Go?
+
+* Selling points
+
+- Open Source;
+- Systems language;
+- Garbage collected;
+- Built-in concurrency;
+- Implicit interfaces;
+- Single binary;
+- Great tooling;
+- Cross platform compilation;
+- Strives for simplicity;
+
+* Simplicity 
+Go intentionally leaves out many features (less is more).
+
+- No classes;
+- No constructors;
+- No inheritance;
+- No exceptions;
+- No annotations;
+
+* Why does Go leave out those features?
+
+Clarity is critical.
+
+When reading code, it should be clear what the program will do.
+
+When writing code, it should be clear how to make the program do what you want.
+
+Sometimes this means writing out a loop instead of invoking an obscure function.
+
+For more background on design:
+
+- [[http://commandcenter.blogspot.com/2012/06/less-is-exponentially-more.html][Less is exponentially more (Pike, 2012)]]
+- [[http://talks.golang.org/2012/splash.article][Go at Google: Language Design in the Service of Software Engineering (Pike, 2012)]]
+
+* Go look and feel
+Main.java
+
+.code codecamp/hello/Main.java
+
+hello.go
+
+.play codecamp/hello/hello.go
+
+
+* Object Oriented 
+
+There are *no* *classes* *or* *type* *hierarchy* in Go, but you can still write code using the object oriented aproach:
+
+- Go has structs(state) and you can define methods on them (behavior). 
+- It takes out inheritence althougheter in favour of composition.
+- You compose objects through type embedding in order to create "has-a" relationship.
+- Polymorphism is achived though implicit interfaces (no "Implements" keyword) to create "is-a" relationship.
+* Example of object composition ("has-a")
+.play codecamp/objectComposition.go /Type Definition/,/ENDTYPE/  
+
+* Example of object composition ("has-a")
+.play codecamp/objectComposition.go /Gopher Example/,/ENDEXAMPLE/  
+
+* Example of Polymorphism ("is-a")
+
+.play codecamp/polymorphism.go	/Type Definition/,/ENDTYPE/
+
+* Example of Polymorphism ("is-a")
+
+.play codecamp/polymorphism.go	/Tag Example/,/ENDEXAMPLE/
+
+* Functions are first class citizens
+
+- Functions in go are of type func()
+- Support for annonimous functions
+  func() {
+    fmt.Println("hello")
+  }
+- Functions can satisfy interfaces
+- Can pass functions though channels
+- Functions as struct fields
+   type op struct {
+     name string
+     fn   func(int, int) int
+   }
+
+
+* Web server example
+
+.play codecamp/hello/server.go
+
+* Down the rabbit hole
+
+`http.ListenAndServe` is a function which takes an address and an interface of type `http.Handler`:
+
+  package http
+  func ListenAndServe(addr string, handler Handler) error
+
+  type Handler interface {
+        ServeHTTP(ResponseWriter, *Request)
+  }
+`HandleFunc` is a function which satisfies this interface by implementing a `ServeHTTP` method which takes a `ResponseWriter` and `Request` pointer.
+
+   type HandlerFunc func(ResponseWriter, *Request) 
+   func (f HandlerFunc) ServeHTTP(w ResponseWriter, r *Request)
+
+ServeHTTP calls f(w, r).
+
+* Concurency
+
+* Concurency support in Go
+
+Concurrency is a way to structure a program by breaking it into pieces that can be executed independently.
+
+- Go Concurrency model is based on CSP (Hoare: Communicating Sequential Processes)
+- "Proccesses" interact with each other solely through message-passing.
+Go also supports clasic stype concurency based on shared state (mutexes and locks)
+
+* Differences vs the Actor Model (Scala, Erlang)
+- processes are anonymous, while actors have identities.
+- message-passing in CSP is not asynchronous.
+- CSP uses explicit channels for message passing, whereas actor systems transmit messages to named destination.
+
+* Concurency primitives in Go
+
+- Concurent execution (goroutines)
+- syncronization and messaging (channels)
+- multi-way concurrent control (select)
+
+* Goroutines
+
+Goroutines are like lightweight threads.
+
+They start with tiny stacks and resize as needed.
+
+Go programs can have hundreds of thousands of them.
+
+Start a goroutine using the `go` statement:
+
+  go f(args)
+The Go runtime schedules goroutines onto OS threads.
+
+* Channels
+
+Channels provide communication between goroutines.
+
+  c := make(chan string)
+
+  // goroutine 1
+  c <- "hello!"
+
+  // goroutine 2
+  s := <-c
+  fmt.Println(s) // "hello!"
+
+* Select
+
+A `select` statement blocks until communication can proceed.
+
+  select {
+  case n := <-in:
+    fmt.Println("received", n)
+  case out <- v:
+    fmt.Println("sent", v)
+  }
+
+Only the selected case runs.
+
+* Example
+
+* RSS news reader
+.code codecamp/concurrent.go /NewsType Example/,/ENDNEWSTYPE/
+
+* RSS news reader
+.play codecamp/concurrent.go /FetchNews Example/,/ENDEXAMPLE/
+
+* RSS news reader
+.code codecamp/concurrent.go /Example RSS/,/ENDEXAMPLERSS/
+ 
+* Go in the wild?
+
+- Docker, Kubernetes, Nomad, Openshift, Messos, Cloud Foundry
+- Etcd/Consul, Influxdb, CockroachDB, NATS
+- Juju, Teraform, Vault, Packer  
+- SPDY proxy for Chrome on mobile devices
+- Download server for Chrome, ChromeOS, Android SDK, Earth, etc.
+- YouTube Vitess MySQL balancer
+
+Most of the software writen in Go targets networked servers, but it's a great general-purpose language.
+
+* Who uses Go?
+
+.link http://golang.org/wiki/GoUsers
+
+.iframe codecamp/tagcloud.html 500 900
+
+* Where to Go next
+
+Take the Go Tour online.
+
+.link http://tour.golang.org
+
+Lots more material.
+
+.link http://golang.org/wiki/Learn
+
+Great community.
+
+.link http://golang.org/project
+
+* Join the Iasi User Group
+
+http://www.meetup.com/Golang-Iasi
+
+
+* Extra Slides
+
+* Example: Reddit Search frontend
+
+.image codecamp/reddit_app.png
+
+.play codecamp/frontend.go /func main/,/func handleSearch/
+
+* Validate the query
+
+.code codecamp/frontend.go /func handleSearch/,/ENDQUERY/
+
+`FormValue` is a method on the type `*http.Request`:
+
+  package http
+  type Request struct {...}
+  func (r *Request) FormValue(key string) string {...}
+
+`query`:=`req.FormValue("q")` initializes a new variable `query` with
+the type of the expression on the right hand side, `string`.
+
+* Fetch the search results
+
+.code codecamp/frontend.go /Run the Reddit search/,/ENDSEARCH/
+
+`Search` returns two values, a slice of results and an error.
+
+  func Search(query string) ([]Result, error) {...}
+
+The results are valid only if the error is nil.
+
+  type error interface {
+      Error() string // a useful human-readable error message
+  }
+
+Errors may contain additional information, accessed via type assertions.
+
+* Render the search results
+
+.code codecamp/frontend.go /Render the/,/ENDRENDER/
+
+`resultsTemplate.Execute` generates HTML and writes it to an `io.Writer`:
+
+  type Writer interface {
+          Write(p []byte) (n int, err error)
+  }
+
+`http.ResponseWriter` implements the `io.Writer` interface.
+
+* HTML templates operate on Go values
+
+.play codecamp/frontend.go /A Result contains/,/\)\)/
+
+* Issue the query to the Reddit Search API
+
+.code codecamp/frontend.go /func Search/,/resp.Body.Close/
+
+The `defer` statement arranges for `resp.Body.Close` to run when `Search` returns.
+
+* Parse the JSON response into a Go struct
+
+.code codecamp/frontend.go /var jsonResponse/,/^}/
+
+* That's it for the frontend
+
+All the packages are from the standard library:
+
+  import (
+  	"encoding/json"
+  	"fmt"
+  	"html/template"
+  	"log"
+  	"net/http"
+  	"net/url"
+  	"time"
+  )
+
+Go servers scale well: each request runs in its own _goroutine_.
+
+
