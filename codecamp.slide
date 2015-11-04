@@ -28,24 +28,24 @@ It is the brainchild of:
 
 * Selling points
 
-- Open Source;
-- Systems language;
-- Garbage collected;
-- Built-in concurrency;
-- Implicit interfaces;
-- Single binary;
-- Great tooling;
-- Cross platform compilation;
-- Strives for simplicity;
+- Open Source
+- Systems language
+- Garbage collected
+- Built-in concurrency
+- Implicit interfaces
+- Single binary
+- Great tooling
+- Cross platform compilation
+- Strives for simplicity
 
 * Simplicity 
 Go intentionally leaves out many features (less is more).
 
-- No classes;
-- No constructors;
-- No inheritance;
-- No exceptions;
-- No annotations;
+- No classes
+- No constructors
+- No inheritance
+- No exceptions
+- No annotations
 
 * Why does Go leave out those features?
 
@@ -76,7 +76,7 @@ hello.go
 
 There are *no* *classes* *or* *type* *hierarchy* in Go, but you can still write code using the object oriented aproach:
 
-- Go has structs(state) and you can define methods on them (behavior). 
+- Go has structs (state) and you can define methods on them (behavior). 
 - It takes out inheritence althougheter in favour of composition.
 - You compose objects through type embedding in order to create "has-a" relationship.
 - Polymorphism is achived though implicit interfaces (no "Implements" keyword) to create "is-a" relationship.
@@ -172,12 +172,14 @@ Channels provide communication between goroutines.
   c := make(chan string)
 
   // goroutine 1
-  c <- "hello!"
-
+  go func(){
+  	c <- "hello!"
+  }()
   // goroutine 2
-  s := <-c
-  fmt.Println(s) // "hello!"
-
+  go func(){
+	s := <-c
+  	fmt.Println(s) // "hello!"
+  }()
 * Select
 
 A `select` statement blocks until communication can proceed.
