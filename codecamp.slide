@@ -28,15 +28,15 @@ It is the brainchild of:
 
 * Selling points
 
-- Open Source
-- Systems language
-- Garbage collected
-- Built-in concurrency
-- Implicit interfaces
-- Single binary
-- Great tooling
-- Cross platform compilation
-- Strives for simplicity
+- Open Source (BSD license)
+- Systems language (compiler,linker writen in Go)
+- Garbage collected (Concurrent Mark Sweep)
+- Built-in concurrency (No external libraries)
+- Implicit interfaces 
+- Single binary (Yey!)
+- Great tooling (gofmt,go build, go test, ....)
+- Cross platform compilation (9 platforms and 5 architectures - *Android* and *IOS*)
+- Strives for simplicity (Less is more)
 
 * Simplicity 
 Go intentionally leaves out many features (less is more).
@@ -255,8 +255,14 @@ Great community.
 
 * Join the Iasi User Group
 
-http://www.meetup.com/Golang-Iasi
-
+.link http://www.meetup.com/Golang-Iasi
+* Codecamp raffle
+.image codecamp/raffle.png 500 700
+* Thank you
+Cosmin Ilie
+Cloud Services Manager
+Optymyze
+@cosmin_ilie
 
 * Extra Slides
 
