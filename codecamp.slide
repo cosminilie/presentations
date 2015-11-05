@@ -118,22 +118,39 @@ There are *no* *classes* *or* *type* *hierarchy* in Go, but you can still write 
 
 `http.ListenAndServe` is a function which takes an address and an interface of type `http.Handler`:
 
-  package http
   func ListenAndServe(addr string, handler Handler) error
-
+  
+  //Registers the handler under DefaultServeMux
+  func HandleFunc(pattern string, handler func(ResponseWriter, *Request))
+  
   type Handler interface {
         ServeHTTP(ResponseWriter, *Request)
   }
-`HandleFunc` is a function which satisfies this interface by implementing a `ServeHTTP` method which takes a `ResponseWriter` and `Request` pointer.
 
+`HandlerFunc` is a function which satisfies this interface by implementing a `ServeHTTP` method which takes a `ResponseWriter` and `Request` pointer.
+  
    type HandlerFunc func(ResponseWriter, *Request) 
    func (f HandlerFunc) ServeHTTP(w ResponseWriter, r *Request)
 
 ServeHTTP calls f(w, r).
 
-* Concurency
+* Wrapping functions for extra benefits
 
-* Concurency support in Go
+ func DoSomething(fn http.HandlerFunc) http.HandlerFunc {
+  return func(w http.ResponseWriter, r *http.Request) {
+    //Do something before
+    fn(w, r)
+    //Do something after
+  }
+ }
+
+`DoSomething` now also satisfies the Handler interface so we can call it like: 
+
+ http.HandleFunc("/path", DoSomething(handleThing))
+
+* Concurrency
+
+* Concurrency support in Go
 
 Concurrency is a way to structure a program by breaking it into pieces that can be executed independently.
 
@@ -146,9 +163,9 @@ Go also supports clasic stype concurency based on shared state (mutexes and lock
 - message-passing in CSP is not asynchronous.
 - CSP uses explicit channels for message passing, whereas actor systems transmit messages to named destination.
 
-* Concurency primitives in Go
+* Concurrency primitives in Go
 
-- Concurent execution (goroutines)
+- Concurrent execution (goroutines)
 - syncronization and messaging (channels)
 - multi-way concurrent control (select)
 
@@ -214,7 +231,7 @@ Only the selected case runs.
 - Download server for Chrome, ChromeOS, Android SDK, Earth, etc.
 - YouTube Vitess MySQL balancer
 
-Most of the software writen in Go targets networked servers, but it's a great general-purpose language.
+Most of the software written in Go targets networked servers, but it's a great general-purpose language.
 
 * Who uses Go?
 
